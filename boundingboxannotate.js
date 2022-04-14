@@ -24,7 +24,8 @@
     function BoundingBoxAnnotate (props) {
         this.id = props.id;
         this.image = props.image;
-        this.boundingBoxes = processBoundingBoxList(props.boundingBoxes)
+        this.boundingBoxes = processBoundingBoxList(props.boundingBoxes);
+        this.labels = props.labels;
     }
 
     BoundingBoxAnnotate.prototype = {
@@ -39,9 +40,18 @@
         _drawBoundingBox: function(parentDiv) {
             parentDiv.setAttribute("style", "position:relative;display:inline-block")
             this.boundingBoxes.forEach((boundingBox, index) => {
+                
+                // Create BoundingBox
                 const boundingBoxDiv = document.createElement('div');
                 boundingBoxDiv.setAttribute("style", `position:absolute;bottom:${boundingBox.yLeft * 100}%;
                 left:${boundingBox.xLeft * 100}%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border:solid 3px black;border-radius:2%;z-index:${index + 1}`);
+                
+                // Add Label
+                const paragraphLabel = document.createElement('p');
+                const label = document.createTextNode(this.labels[index]);
+                paragraphLabel.appendChild(label);
+                boundingBoxDiv.appendChild(paragraphLabel);
+                
                 parentDiv.appendChild(boundingBoxDiv);
             }); 
         },
