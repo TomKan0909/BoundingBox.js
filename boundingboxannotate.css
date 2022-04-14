@@ -6,14 +6,13 @@
 }
 
 .BoundingBoxDiv {
-    border:solid 3px black;
+    border:solid 3px;
     border-radius:2%;
     border-top-left-radius:0;
     cursor:pointer;
 }
 
 .LabelDiv {
-    background-color:black;
     color:white;
     border-radius:2%;
     padding:1px 5px;

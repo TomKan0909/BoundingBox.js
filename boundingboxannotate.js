@@ -1,10 +1,14 @@
 (function (window, document) {
   // Left and right coordinate
-  function BoundingBox(leftBottom, rightTop) {
+  function BoundingBox(leftBottom, rightTop, color, label, content) {
     this.xLeft = leftBottom[0];
     this.yLeft = leftBottom[1];
     this.xRight = rightTop[0];
     this.yRight = rightTop[1];
+    this.color = color || _generateRandomColor();
+    this.label = label;
+    this.content = content;
+    console.log(this.color);
   }
 
   BoundingBox.prototype = {
@@ -18,7 +22,14 @@
 
   function processBoundingBoxList(boundingBoxList) {
     return boundingBoxList.map(
-      (boundingBox) => new BoundingBox(boundingBox[0], boundingBox[1])
+      (boundingBox) =>
+        new BoundingBox(
+          boundingBox.coordinates[0],
+          boundingBox.coordinates[1],
+          boundingBox.color,
+          boundingBox.label,
+          boundingBox.content
+        )
     );
   }
 
@@ -105,6 +116,16 @@
     }
   }
 
+  // https://stackoverflow.com/questions/1484506/random-color-generator
+  function _generateRandomColor() {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
   BoundingBoxAnnotate.prototype = {
     createBoundingBoxAnnotate: function () {
       const div = document.getElementById(this.id);
@@ -125,14 +146,14 @@
       this.boundingBoxes.forEach((boundingBox, index) => {
         // Create BoundingBox
         const boundingBoxDiv = document.createElement('div');
-        boundingBoxDiv.classList.add('BoundingBoxDiv'); 
+        boundingBoxDiv.classList.add('BoundingBoxDiv');
         boundingBoxDiv.setAttribute(
           'style',
           boundingBoxDiv.getAttribute('style') +
             `;position:absolute;bottom:${boundingBox.yLeft * 100}%;
                 left:${
                   boundingBox.xLeft * 100
-                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;z-index:${
+                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${boundingBox.color};z-index:${
               index + 1
             }`
         );
@@ -146,14 +167,13 @@
         labelDiv.classList.add('LabelDiv');
         labelDiv.setAttribute(
           'style',
-          labelDiv.getAttribute('style') + `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
-                left:${
-                  boundingBox.xLeft * 100
-                }%;z-index:${index}`
+          labelDiv.getAttribute('style') +
+            `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
+                left:${boundingBox.xLeft * 100}%;background-color:${boundingBox.color};z-index:${index};`
         );
 
         const spanLabel = document.createElement('span');
-        const labelText = this.labels[index];
+        const labelText = boundingBox.label;
         const label = document.createTextNode(labelText);
 
         spanLabel.appendChild(label);
@@ -188,7 +208,8 @@
       const list = document.createElement('ul');
       list.setAttribute('style', 'list-style-type:none');
 
-      const uniqueLabels = [...new Set(this.labels)];
+      const uniqueLabels = [... new Set(this.boundingBoxes.map(boundingBox => boundingBox.label))]
+    //   const uniqueLabels = [...new Set(this.labels)];
       uniqueLabels.forEach((label) => {
         const listElement = document.createElement('li');
 
@@ -211,6 +232,7 @@
         list.appendChild(listElement);
       });
       const legendHeaderDiv = document.createElement('div');
+      // TODO: create css for legendHeaderDiv
       legendHeaderDiv.setAttribute('id', 'legendHeader');
       legendHeaderDiv.setAttribute('style', 'cursor:move');
       const legendHeaderText = document.createTextNode('Labels');
