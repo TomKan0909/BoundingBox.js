@@ -108,14 +108,14 @@
   BoundingBoxAnnotate.prototype = {
     createBoundingBoxAnnotate: function () {
       const div = document.getElementById(this.id);
+
       let image = document.createElement('img');
       image.src = this.image;
       image.setAttribute('style', 'display:block');
+
       const parentDiv = document.createElement('div');
-      parentDiv.setAttribute(
-        'style',
-        'position:relative;display:inline-block;margin:0 auto'
-      );
+      parentDiv.classList.add('BoundingBoxAnnotateParent');
+
       parentDiv.appendChild(image);
       this._drawBoundingBox(parentDiv);
       this._generateLegend(parentDiv);
@@ -125,28 +125,33 @@
       this.boundingBoxes.forEach((boundingBox, index) => {
         // Create BoundingBox
         const boundingBoxDiv = document.createElement('div');
+        boundingBoxDiv.classList.add('BoundingBoxDiv'); 
         boundingBoxDiv.setAttribute(
           'style',
-          `position:absolute;bottom:${boundingBox.yLeft * 100}%;
+          boundingBoxDiv.getAttribute('style') +
+            `;position:absolute;bottom:${boundingBox.yLeft * 100}%;
                 left:${
                   boundingBox.xLeft * 100
-                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border:solid 3px black;border-radius:2%;border-top-left-radius:0;cursor:pointer;z-index:${
-            index + 1
-          }`
+                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;z-index:${
+              index + 1
+            }`
         );
+
         boundingBoxDiv.addEventListener('click', function (e) {
           console.log('Clicked : ', e);
         });
 
         // Add Label
         const labelDiv = document.createElement('div');
+        labelDiv.classList.add('LabelDiv');
         labelDiv.setAttribute(
           'style',
-          `position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
+          labelDiv.getAttribute('style') + `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
                 left:${
                   boundingBox.xLeft * 100
-                }%;background-color:black;color:white;border-radius:2%;padding:1px 5px;z-index:${index}`
+                }%;z-index:${index}`
         );
+
         const spanLabel = document.createElement('span');
         const labelText = this.labels[index];
         const label = document.createTextNode(labelText);
@@ -170,7 +175,6 @@
         }
         this._labels2DivID[labelText].push(boundingBoxDiv.id, labelDiv.id);
       });
-      console.log(this._labels2DivID);
     },
 
     // _generateModal: function() {
@@ -179,10 +183,7 @@
 
     _generateLegend: function (parentDiv) {
       const legendDiv = document.createElement('div');
-      legendDiv.setAttribute(
-        'style',
-        `position:absolute;bottom:0%;right:0%;height:30%;width:20%;border: solid 3px grey;border-radius:2%;background-color:white;z-index:999999`
-      );
+      legendDiv.classList.add('LegendDiv');
 
       const list = document.createElement('ul');
       list.setAttribute('style', 'list-style-type:none');
@@ -222,18 +223,16 @@
     },
 
     _handleCheckBoxOnclick: function (checkBoxElement, label) {
-        const divIDsToHide = this._labels2DivID[label];
-        divIDsToHide.forEach((divID) => {
-          const element = document.getElementById(divID);
-          if (checkBoxElement.checked) {
-            element.style.display = 'block';
-          } else {
-            element.style.display = 'none';
-          }
-        });
+      const divIDsToHide = this._labels2DivID[label];
+      divIDsToHide.forEach((divID) => {
+        const element = document.getElementById(divID);
+        if (checkBoxElement.checked) {
+          element.style.display = 'block';
+        } else {
+          element.style.display = 'none';
+        }
+      });
     },
-
-    
   };
 
   // allows function BoundingBoxAnnotate to be accessible globally on the window object(represents browser)

@@ -1,0 +1,32 @@
+
+.BoundingBoxAnnotateParent {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.BoundingBoxDiv {
+    border:solid 3px black;
+    border-radius:2%;
+    border-top-left-radius:0;
+    cursor:pointer;
+}
+
+.LabelDiv {
+    background-color:black;
+    color:white;
+    border-radius:2%;
+    padding:1px 5px;
+}
+
+.LegendDiv {
+    position:absolute;
+    bottom:0%;
+    right:0%;
+    height:30%;
+    width:20%;
+    border: solid 3px grey;
+    border-radius:2%;
+    background-color:white;
+    z-index:999999;
+}
