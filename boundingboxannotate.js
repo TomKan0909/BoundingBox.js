@@ -38,6 +38,8 @@
     this.width = props.width;
     this.height = props.height;
     this.boundingBoxes = processBoundingBoxList(props.boundingBoxes);
+    this.displayLegend = props.displayLegend !== undefined ? props.displayLegend : true;
+
 
     this._labels2DivID = {}; // stores a mapping of labels to their corresponding divs
     this._labels2Color = {}; // stores a mapping of labels to corresponding color
@@ -139,8 +141,9 @@
       parentDiv.appendChild(image);
       this._drawBoundingBoxes(parentDiv);
       this._generateModals()
-      this._generateLegend(parentDiv);
-      // div.appendChild(parentDiv);
+      if (this.displayLegend){
+        this._generateLegend(parentDiv); 
+      } 
     },
     _createImage: function () {
       let image = document.createElement('img');
