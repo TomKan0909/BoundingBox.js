@@ -12,7 +12,7 @@ const propsV2 = {
     image: 'image0.jpeg',
     // width: '800',
     // height: '600', 
-    displayLegend: false,
+    displayLegend: true,
     modalOnClick: true,
     boundingBoxes : [
         {
@@ -109,6 +109,5 @@ const propsV2 = {
  * 
  */
 
-const generator = new BoundingBoxAnnotate(propsV2);
-generator.createBoundingBoxAnnotate();
-generator.toggleLegend(false);
+const bba = new BoundingBoxAnnotate(propsV2);
+bba.createBoundingBoxAnnotate();    

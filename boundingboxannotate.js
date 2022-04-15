@@ -141,7 +141,7 @@
           typeof o.nodeType === 'number' &&
           typeof o.nodeName === 'string';
   }
-
+  /**********************************************************/
   BoundingBoxAnnotate.prototype = {
     createBoundingBoxAnnotate: function () {
       const div = document.getElementById(this.id);
@@ -153,8 +153,8 @@
       const image = this._createImage();
       parentDiv.appendChild(image);
       this._drawBoundingBoxes(parentDiv);
-      if (this.modalOnClick){
-        this._generateModals();  
+      if (this.modalOnClick) {
+        this._generateModals();
       }
       if (this.displayLegend) {
         this._generateLegend(parentDiv);
@@ -163,21 +163,49 @@
     toggleLegend: function (isDisplay) {
       const parentDiv = document.getElementById(this.id).firstChild;
       let legendDiv = document.getElementsByClassName('LegendDiv');
-      
-      this.displayLegend = isDisplay ? true: false;
 
-      if (legendDiv.length !== 0){
+      if (legendDiv.length !== 0) {
         legendDiv = legendDiv[0];
-        if (isDisplay){
+        if (isDisplay) {
           legendDiv.style.display = 'block';
         } else {
           legendDiv.style.display = 'none';
-        }       
+        }
       } else {
-        if (isDisplay){
+        if (isDisplay) {
           this._generateLegend(parentDiv);
-        } 
+        }
       }
+    },
+    toggleOnClick: function (isOnClick) {
+      const boundingBoxDivIDs = Object.keys(this._divID2Content);
+      // Check if modals are generated
+      const modalGenerated =
+        document.getElementsByClassName('modal').length !== 0;
+      if (!modalGenerated && isOnClick) {
+        this._generateModals();
+        return;
+      }
+
+      boundingBoxDivIDs.forEach((boundingBoxDivID) => {
+        const boundingBoxDiv = document.getElementById(boundingBoxDivID);
+        const modalDiv = boundingBoxDiv.nextSibling;
+        if (!isOnClick) {
+          boundingBoxDiv.onclick = null;
+          boundingBoxDiv.setAttribute(
+            'style',
+            boundingBoxDiv.getAttribute('style') + ';cursor:default;'
+          );
+        } else {
+          boundingBoxDiv.onclick = () => {
+            modalDiv.style.display = 'block';
+          };
+          boundingBoxDiv.setAttribute(
+            'style',
+            boundingBoxDiv.getAttribute('style') + ';cursor:pointer;'
+          );
+        }
+      });
     },
     _createImage: function () {
       let image = document.createElement('img');
@@ -204,7 +232,7 @@
                   boundingBox.xLeft * 100
                 }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${
               boundingBox.color
-            };cursor:${this.modalOnClick ? 'pointer': 'default'};z-index:${index + 1}`
+            };z-index:${index + 1}`
         );
 
         // Add Label
@@ -278,7 +306,6 @@
         };
         modalContent.appendChild(spanClose);
 
-        // TODO: append content
         const content = this._divID2Content[boundingBoxDivID];
         if (typeof content === 'string') {
           const contentParagraph = document.createElement('p');
@@ -293,9 +320,13 @@
         }
 
         const boundingBoxDiv = document.getElementById(boundingBoxDivID);
-        boundingBoxDiv.addEventListener('click', () => {
+        boundingBoxDiv.onclick = () => {
           modalDiv.style.display = 'block';
-        });
+        };
+        boundingBoxDiv.setAttribute(
+          'style',
+          boundingBoxDiv.getAttribute('style') + ';cursor:pointer;'
+        );
 
         window.onclick = (event) => {
           if (event.target == modalDiv) {
@@ -311,6 +342,7 @@
       const legendDiv = document.createElement('div');
       legendDiv.classList.add('LegendDiv');
 
+      console.log(legendDiv);
       const labelListDiv = document.createElement('div');
       labelListDiv.classList.add('LabelListDiv');
 
