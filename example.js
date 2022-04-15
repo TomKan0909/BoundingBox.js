@@ -13,6 +13,7 @@ const propsV2 = {
     // width: '800',
     // height: '600', 
     displayLegend: false,
+    modalOnClick: true,
     boundingBoxes : [
         {
             coordinates: [[0.1, 0.1], [0.2, 0.2]],
@@ -110,3 +111,4 @@ const propsV2 = {
 
 const generator = new BoundingBoxAnnotate(propsV2);
 generator.createBoundingBoxAnnotate();
+generator.toggleLegend(false);

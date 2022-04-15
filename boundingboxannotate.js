@@ -38,14 +38,17 @@
     this.width = props.width;
     this.height = props.height;
     this.boundingBoxes = processBoundingBoxList(props.boundingBoxes);
-    this.displayLegend = props.displayLegend !== undefined ? props.displayLegend : true;
-
+    this.displayLegend =
+      props.displayLegend !== undefined ? props.displayLegend : true;
+    this.modalOnClick =
+      props.modalOnClick !== undefined ? props.modalOnClick : true;
 
     this._labels2DivID = {}; // stores a mapping of labels to their corresponding divs
     this._labels2Color = {}; // stores a mapping of labels to corresponding color
     this._divID2Content = {}; // stores a mapping of boundingboxdivs to their content
   }
 
+  /*********************** HELPERS ***********************/
   // https://www.w3schools.com/howto/howto_js_draggable.asp
   function _dragElement(element) {
     let pos1 = 0,
@@ -129,6 +132,16 @@
     return color;
   }
 
+  // https://stackoverflow.com/questions/384286/how-do-you-check-if-a-javascript-object-is-a-dom-object
+  function _isNode(o) {
+    return typeof Node === 'object'
+      ? o instanceof Node
+      : o &&
+          typeof o === 'object' &&
+          typeof o.nodeType === 'number' &&
+          typeof o.nodeName === 'string';
+  }
+
   BoundingBoxAnnotate.prototype = {
     createBoundingBoxAnnotate: function () {
       const div = document.getElementById(this.id);
@@ -140,10 +153,31 @@
       const image = this._createImage();
       parentDiv.appendChild(image);
       this._drawBoundingBoxes(parentDiv);
-      this._generateModals()
-      if (this.displayLegend){
-        this._generateLegend(parentDiv); 
-      } 
+      if (this.modalOnClick){
+        this._generateModals();  
+      }
+      if (this.displayLegend) {
+        this._generateLegend(parentDiv);
+      }
+    },
+    toggleLegend: function (isDisplay) {
+      const parentDiv = document.getElementById(this.id).firstChild;
+      let legendDiv = document.getElementsByClassName('LegendDiv');
+      
+      this.displayLegend = isDisplay ? true: false;
+
+      if (legendDiv.length !== 0){
+        legendDiv = legendDiv[0];
+        if (isDisplay){
+          legendDiv.style.display = 'block';
+        } else {
+          legendDiv.style.display = 'none';
+        }       
+      } else {
+        if (isDisplay){
+          this._generateLegend(parentDiv);
+        } 
+      }
     },
     _createImage: function () {
       let image = document.createElement('img');
@@ -170,7 +204,7 @@
                   boundingBox.xLeft * 100
                 }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${
               boundingBox.color
-            };z-index:${index + 1}`
+            };cursor:${this.modalOnClick ? 'pointer': 'default'};z-index:${index + 1}`
         );
 
         // Add Label
@@ -217,7 +251,7 @@
       });
     },
 
-    _generateModals: function() {
+    _generateModals: function () {
       /* 1. Generate all modals 
            - create div of class modal
            - create div for modal content
@@ -227,7 +261,7 @@
         2. Get the bounding boxes that should open modal
            - bounding boxes add onclick functionality that displays the modal
       */
-      Object.keys(this._divID2Content).map(boundingBoxDivID => {
+      Object.keys(this._divID2Content).map((boundingBoxDivID) => {
         const modalDiv = document.createElement('div');
         modalDiv.classList.add('modal');
 
@@ -235,16 +269,15 @@
         modalContent.classList.add('modal-content');
         modalDiv.appendChild(modalContent);
 
-
         const spanClose = document.createElement('span');
         spanClose.classList.add('close');
         const closeSymbol = document.createTextNode('\u2715');
         spanClose.appendChild(closeSymbol);
         spanClose.onclick = () => {
           modalDiv.style.display = 'none';
-        }
+        };
         modalContent.appendChild(spanClose);
-        
+
         // TODO: append content
         const content = this._divID2Content[boundingBoxDivID];
         if (typeof content === 'string') {
@@ -253,9 +286,11 @@
           contentParagraph.appendChild(contentParagraphText);
           modalContent.appendChild(contentParagraph);
           contentParagraph.setAttribute('style', 'margin:2% 4%');
+        } else if (_isNode(content)) {
+          modalContent.appendChild(content);
+        } else {
+          throw 'Unsupported type for content';
         }
-
-
 
         const boundingBoxDiv = document.getElementById(boundingBoxDivID);
         boundingBoxDiv.addEventListener('click', () => {
@@ -263,13 +298,13 @@
         });
 
         window.onclick = (event) => {
-          if (event.target == modalDiv){
+          if (event.target == modalDiv) {
             modalContent.style.display = 'none';
           }
-        }
+        };
 
         boundingBoxDiv.insertAdjacentElement('afterend', modalDiv);
-      })
+      });
     },
 
     _generateLegend: function (parentDiv) {
