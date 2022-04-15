@@ -1,8 +1,8 @@
-
 .BoundingBoxAnnotateParent {
     position: relative;
     display: inline-block;
     margin: 0 auto;
+    font-family: 'Helvetica', 'Arial', sans-serif;
 }
 
 .BoundingBoxDiv {
@@ -10,12 +10,14 @@
     border-radius:2%;
     border-top-left-radius:0;
     cursor:pointer;
+    transition: all 0.5s linear;
 }
 
 .LabelDiv {
     color:white;
     border-radius:2%;
     padding:1px 5px;
+    transition: all 0.5s linear;
 }
 
 .LegendDiv {
@@ -24,8 +26,113 @@
     right:0%;
     height:30%;
     width:20%;
-    border: solid 3px grey;
+    border: solid 3px #9fa9a3;
     border-radius:2%;
-    background-color:white;
+    background-color:#e3e0cc;
     z-index:999999;
+}
+
+.LegendHeaderDiv {
+    cursor: move;
+    text-align: center;
+    padding: 4px 0px;
+    background-color: #9fa9a3;
+    color: white;
+}
+
+.LabelList {
+    list-style-type: none;
+    padding-left: 5%;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 75%;
+}
+
+.LabelListDiv {
+    overflow:hidden;
+    overflow-y:scroll;
+    height: 75%;
+    padding-left: 5%;
+    padding-top: 5%;
+}
+
+.hidden {
+    display: none;
+}
+  
+.visuallyhidden {
+    opacity: 0;
+}
+
+
+
+/* Css for checkbox https://www.w3schools.com/howto/howto_css_custom_checkbox.asp */
+
+/* Customize the label (the container) */
+.CheckBoxContainer {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  
+/* Hide the browser's default checkbox */
+.CheckBoxContainer input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.CheckMark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 16px;
+    width: 16px;
+    border-radius: 4px;
+    background-color: #eee;
+    transition: 0.5s;
+}
+
+/* On mouse-over, add a grey background color */
+.CheckBoxContainer:hover input ~ .CheckMark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.CheckBoxContainer input:checked ~ .CheckMark {
+    background-color: var(--color);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.CheckMark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.CheckBoxContainer input:checked ~ .CheckMark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.CheckBoxContainer .CheckMark:after {
+    left: 5px;
+    width: 3px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }

@@ -8,7 +8,6 @@
     this.color = color || _generateRandomColor();
     this.label = label;
     this.content = content;
-    console.log(this.color);
   }
 
   BoundingBox.prototype = {
@@ -40,6 +39,7 @@
     this.labels = props.labels;
 
     this._labels2DivID = {}; // stores a mapping of labels to their corresponding divs
+    this._labels2Color = {};
   }
 
   // https://www.w3schools.com/howto/howto_js_draggable.asp
@@ -116,12 +116,11 @@
     }
   }
 
-  // https://stackoverflow.com/questions/1484506/random-color-generator
+  // https://stackoverflow.com/questions/20114469/javascript-generate-random-dark-color
   function _generateRandomColor() {
-    let letters = '0123456789ABCDEF';
     let color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+    for (let i = 0; i < 6; i++) {
+      color += Math.floor(Math.random() * 10);
     }
     return color;
   }
@@ -153,9 +152,9 @@
             `;position:absolute;bottom:${boundingBox.yLeft * 100}%;
                 left:${
                   boundingBox.xLeft * 100
-                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${boundingBox.color};z-index:${
-              index + 1
-            }`
+                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${
+              boundingBox.color
+            };z-index:${index + 1}`
         );
 
         boundingBoxDiv.addEventListener('click', function (e) {
@@ -169,7 +168,9 @@
           'style',
           labelDiv.getAttribute('style') +
             `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
-                left:${boundingBox.xLeft * 100}%;background-color:${boundingBox.color};z-index:${index};`
+                left:${boundingBox.xLeft * 100}%;background-color:${
+              boundingBox.color
+            };z-index:${index};`
         );
 
         const spanLabel = document.createElement('span');
@@ -189,11 +190,16 @@
         parentDiv.appendChild(boundingBoxDiv);
         parentDiv.appendChild(labelDiv);
 
-        // Add labels to labels2divid
+        // Add labels to labels2divID
         if (!this._labels2DivID[labelText]) {
           this._labels2DivID[labelText] = [];
         }
         this._labels2DivID[labelText].push(boundingBoxDiv.id, labelDiv.id);
+
+        // Add colors to labels2color
+        if (!this._labels2Color[labelText]) {
+          this._labels2Color[labelText] = boundingBox.color;
+        }
       });
     },
 
@@ -205,53 +211,91 @@
       const legendDiv = document.createElement('div');
       legendDiv.classList.add('LegendDiv');
 
-      const list = document.createElement('ul');
-      list.setAttribute('style', 'list-style-type:none');
+      const labelListDiv = document.createElement('div');
+      labelListDiv.classList.add('LabelListDiv');
 
-      const uniqueLabels = [... new Set(this.boundingBoxes.map(boundingBox => boundingBox.label))]
-    //   const uniqueLabels = [...new Set(this.labels)];
+      const uniqueLabels = [
+        ...new Set(this.boundingBoxes.map((boundingBox) => boundingBox.label)),
+      ];
       uniqueLabels.forEach((label) => {
-        const listElement = document.createElement('li');
-
+        const labelElement = document.createElement('label');
+        labelElement.classList.add('CheckBoxContainer');
         // Create checkbox
         const checkBox = document.createElement('input');
         checkBox.setAttribute('type', 'checkbox');
         checkBox.setAttribute('id', 'checkBox-' + label);
         // Set onclick functionality;
-        checkBox.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
+        // checkBox.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
+        checkBox.addEventListener(
+          'click',
+          () => this._handleCheckBoxOnclick(checkBox, label),
+          false
+        );
         checkBox.checked = true;
-
+        // labelElement.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
         // Create Text
-        const text = document.createElement('span');
+        const checkMark = document.createElement('span');
+        checkMark.classList.add('CheckMark');
+        // checkMark.style.backgroundColor = this._labels2Color[label];
+
         const textNode = document.createTextNode(label);
-        text.appendChild(textNode);
+        labelElement.appendChild(textNode);
+        labelElement.appendChild(checkBox);
+        labelElement.appendChild(checkMark);
+        labelElement.setAttribute(
+          'style',
+          `--color: ${this._labels2Color[label]}`
+        );
 
-        listElement.appendChild(checkBox);
-        listElement.appendChild(text);
-
-        list.appendChild(listElement);
+        labelListDiv.appendChild(labelElement);
       });
       const legendHeaderDiv = document.createElement('div');
-      // TODO: create css for legendHeaderDiv
       legendHeaderDiv.setAttribute('id', 'legendHeader');
-      legendHeaderDiv.setAttribute('style', 'cursor:move');
+
+      legendHeaderDiv.classList.add('LegendHeaderDiv');
       const legendHeaderText = document.createTextNode('Labels');
       legendHeaderDiv.appendChild(legendHeaderText);
       legendDiv.appendChild(legendHeaderDiv);
 
-      legendDiv.appendChild(list);
+      legendDiv.appendChild(labelListDiv);
       parentDiv.appendChild(legendDiv);
       _dragElement(legendDiv);
     },
 
     _handleCheckBoxOnclick: function (checkBoxElement, label) {
       const divIDsToHide = this._labels2DivID[label];
+      // https://www.impressivewebs.com/animate-display-block-none/
+      console.log(divIDsToHide);
       divIDsToHide.forEach((divID) => {
         const element = document.getElementById(divID);
         if (checkBoxElement.checked) {
-          element.style.display = 'block';
+          if (element.classList.contains('hidden')) {
+            element.classList.remove('hidden');
+            console.log('remove hidden');
+            setTimeout(function () {
+              element.classList.remove('visuallyhidden');
+              console.log('remove visually hidden');
+            }, 20);
+          } else {
+              checkBoxElement.checked = false;
+          }
         } else {
-          element.style.display = 'none';
+          element.classList.add('visuallyhidden');
+          console.log('add visually hidden');
+          element.addEventListener(
+            'transitionend',
+            function (e) {
+              console.log('hidden');
+              if (element.classList.contains('visuallyhidden')) {
+                element.classList.add('hidden');
+              }
+            },
+            {
+              capture: false,
+              once: true,
+              passive: false,
+            }
+          );
         }
       });
     },
