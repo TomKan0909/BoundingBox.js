@@ -10,8 +10,8 @@
 const propsV2 = {
     id: 'test',
     image: 'image0.jpeg',
-    width: '800',
-    height: '600', 
+    // width: '800',
+    // height: '600', 
     boundingBoxes : [
         {
             coordinates: [[0.1, 0.1], [0.2, 0.2]],

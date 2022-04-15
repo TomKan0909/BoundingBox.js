@@ -40,12 +40,13 @@
     this.boundingBoxes = processBoundingBoxList(props.boundingBoxes);
 
     this._labels2DivID = {}; // stores a mapping of labels to their corresponding divs
-    this._labels2Color = {};
+    this._labels2Color = {}; // stores a mapping of labels to corresponding color
+    this._divID2Content = {}; // stores a mapping of boundingboxdivs to their content
   }
 
   // https://www.w3schools.com/howto/howto_js_draggable.asp
   function _dragElement(element) {
-    var pos1 = 0,
+    let pos1 = 0,
       pos2 = 0,
       pos3 = 0,
       pos4 = 0;
@@ -129,29 +130,31 @@
   BoundingBoxAnnotate.prototype = {
     createBoundingBoxAnnotate: function () {
       const div = document.getElementById(this.id);
-      
+
       const parentDiv = document.createElement('div');
       parentDiv.classList.add('BoundingBoxAnnotateParent');
-      
+
+      div.appendChild(parentDiv);
       const image = this._createImage();
       parentDiv.appendChild(image);
-      this._drawBoundingBox(parentDiv);
+      this._drawBoundingBoxes(parentDiv);
+      this._generateModals()
       this._generateLegend(parentDiv);
-      div.appendChild(parentDiv);
+      // div.appendChild(parentDiv);
     },
-    _createImage: function() {
+    _createImage: function () {
       let image = document.createElement('img');
       image.src = this.image;
       if (this.width) {
         image.width = this.width;
       }
-      if(this.height) {
+      if (this.height) {
         image.height = this.height;
       }
       image.setAttribute('style', 'display:block');
-      return image
+      return image;
     },
-    _drawBoundingBox: function (parentDiv) {
+    _drawBoundingBoxes: function (parentDiv) {
       this.boundingBoxes.forEach((boundingBox, index) => {
         // Create BoundingBox
         const boundingBoxDiv = document.createElement('div');
@@ -166,10 +169,6 @@
               boundingBox.color
             };z-index:${index + 1}`
         );
-
-        boundingBoxDiv.addEventListener('click', function (e) {
-          console.log('Clicked : ', e);
-        });
 
         // Add Label
         const labelDiv = document.createElement('div');
@@ -210,12 +209,65 @@
         if (!this._labels2Color[labelText]) {
           this._labels2Color[labelText] = boundingBox.color;
         }
+        // Add content mapping to div;
+        this._divID2Content[boundingBoxDiv.id] = boundingBox.content;
       });
     },
 
-    // _generateModal: function() {
+    _generateModals: function() {
+      /* 1. Generate all modals 
+           - create div of class modal
+           - create div for modal content
+              -  add span for closing
+                  - span add onclick functionality that closes modal
+              - append child paragraph element if content is text else if HTML element append child that
+        2. Get the bounding boxes that should open modal
+           - bounding boxes add onclick functionality that displays the modal
+      */
+      Object.keys(this._divID2Content).map(boundingBoxDivID => {
+        const modalDiv = document.createElement('div');
+        modalDiv.classList.add('modal');
 
-    // }
+        const modalContent = document.createElement('div');
+        modalContent.classList.add('modal-content');
+        modalDiv.appendChild(modalContent);
+
+
+        const spanClose = document.createElement('span');
+        spanClose.classList.add('close');
+        const closeSymbol = document.createTextNode('\u2715');
+        spanClose.appendChild(closeSymbol);
+        spanClose.onclick = () => {
+          modalDiv.style.display = 'none';
+        }
+        modalContent.appendChild(spanClose);
+        
+        // TODO: append content
+        const content = this._divID2Content[boundingBoxDivID];
+        if (typeof content === 'string') {
+          const contentParagraph = document.createElement('p');
+          const contentParagraphText = document.createTextNode(content);
+          contentParagraph.appendChild(contentParagraphText);
+          modalContent.appendChild(contentParagraph);
+          contentParagraph.setAttribute('style', 'margin:2% 4%');
+        }
+
+
+
+        const boundingBoxDiv = document.getElementById(boundingBoxDivID);
+        boundingBoxDiv.addEventListener('click', () => {
+          modalDiv.style.display = 'block';
+        });
+
+        window.onclick = (event) => {
+          if (event.target == modalDiv){
+            modalContent.style.display = 'none';
+          }
+        }
+
+        boundingBoxDiv.insertAdjacentElement('afterend', modalDiv);
+      })
+    },
 
     _generateLegend: function (parentDiv) {
       const legendDiv = document.createElement('div');
@@ -235,18 +287,15 @@
         checkBox.setAttribute('type', 'checkbox');
         checkBox.setAttribute('id', 'checkBox-' + label);
         // Set onclick functionality;
-        // checkBox.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
         checkBox.addEventListener(
           'click',
           () => this._handleCheckBoxOnclick(checkBox, label),
           false
         );
         checkBox.checked = true;
-        // labelElement.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
         // Create Text
         const checkMark = document.createElement('span');
         checkMark.classList.add('CheckMark');
-        // checkMark.style.backgroundColor = this._labels2Color[label];
 
         const textNode = document.createTextNode(label);
         labelElement.appendChild(textNode);
@@ -281,21 +330,17 @@
         if (checkBoxElement.checked) {
           if (element.classList.contains('hidden')) {
             element.classList.remove('hidden');
-            console.log('remove hidden');
             setTimeout(function () {
               element.classList.remove('visuallyhidden');
-              console.log('remove visually hidden');
             }, 20);
           } else {
-              checkBoxElement.checked = false;
+            checkBoxElement.checked = false;
           }
         } else {
           element.classList.add('visuallyhidden');
-          console.log('add visually hidden');
           element.addEventListener(
             'transitionend',
             function (e) {
-              console.log('hidden');
               if (element.classList.contains('visuallyhidden')) {
                 element.classList.add('hidden');
               }
