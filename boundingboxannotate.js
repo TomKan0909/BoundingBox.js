@@ -35,8 +35,9 @@
   function BoundingBoxAnnotate(props) {
     this.id = props.id;
     this.image = props.image;
+    this.width = props.width;
+    this.height = props.height;
     this.boundingBoxes = processBoundingBoxList(props.boundingBoxes);
-    this.labels = props.labels;
 
     this._labels2DivID = {}; // stores a mapping of labels to their corresponding divs
     this._labels2Color = {};
@@ -128,18 +129,27 @@
   BoundingBoxAnnotate.prototype = {
     createBoundingBoxAnnotate: function () {
       const div = document.getElementById(this.id);
-
-      let image = document.createElement('img');
-      image.src = this.image;
-      image.setAttribute('style', 'display:block');
-
+      
       const parentDiv = document.createElement('div');
       parentDiv.classList.add('BoundingBoxAnnotateParent');
-
+      
+      const image = this._createImage();
       parentDiv.appendChild(image);
       this._drawBoundingBox(parentDiv);
       this._generateLegend(parentDiv);
       div.appendChild(parentDiv);
+    },
+    _createImage: function() {
+      let image = document.createElement('img');
+      image.src = this.image;
+      if (this.width) {
+        image.width = this.width;
+      }
+      if(this.height) {
+        image.height = this.height;
+      }
+      image.setAttribute('style', 'display:block');
+      return image
     },
     _drawBoundingBox: function (parentDiv) {
       this.boundingBoxes.forEach((boundingBox, index) => {
