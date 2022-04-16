@@ -1,6 +1,6 @@
 (function (window, document) {
   // Left and right coordinate
-  function BoundingBox(leftBottom, rightTop, color, label, content) {
+  function BoundingBox(leftBottom, rightTop, color, label, content, id) {
     this.xLeft = leftBottom[0];
     this.yLeft = leftBottom[1];
     this.xRight = rightTop[0];
@@ -8,6 +8,7 @@
     this.color = color || _generateRandomColor();
     this.label = label;
     this.content = content;
+    this.id = id;
   }
 
   BoundingBox.prototype = {
@@ -27,7 +28,8 @@
           boundingBox.coordinates[1],
           boundingBox.color,
           boundingBox.label,
-          boundingBox.content
+          boundingBox.content,
+          boundingBox.id
         )
     );
   }
@@ -226,15 +228,50 @@
       if (legendDiv.length === 0) {
         return;
       }
-      // Check if checkbox with label exists, if it doesnt, create a new checkbox else
-      // get corresponding checkbox by its id and change its onclick functionality
-      const checkBox = document.getElementById('checkBox-' + boundingBox.label);
-      if (checkBox) {
-        // maybe dont have to do anything???
-      } else {
+
+      if (!document.getElementById('labelElement-' + boundingBox.label)) {
         const labelElement = this._createLabelElement(boundingBox.label);
         const labelListDiv = document.getElementsByClassName('LabelListDiv')[0];
         labelListDiv.appendChild(labelElement);
+      }
+    },
+    deleteBoundingBox: function (boundingBoxID) {
+      /* 1. Remove boundingbox from this.boundingBoxes - get label too 
+         2. Remove it from this._labels2DivID
+         3. remove it from this._labels2color if last color and remove corresponding label element
+         4. remove it from divid2content
+         5. remove boundingbox element; find by id
+         6. remove label element; find by id
+         7. remove modal element if exists; find by id
+      */
+      let label;
+      this.boundingBoxes = this.boundingBoxes.filter((boundingBox) => {
+        if (boundingBox.id === boundingBoxID) {
+          label = boundingBox.label;
+          return false;
+        }
+        return true;
+      });
+      if (!label) {
+        return;
+      }
+      const labelID = 'label-' + boundingBoxID;
+      const modalID = 'modal-' + boundingBoxID;
+      this._labels2DivID[label] = this._labels2DivID[label].filter(
+        (divID) => divID !== boundingBoxID && divID !== labelID
+      );
+      if (this._labels2DivID[label].length === 0) {
+        delete this._labels2Color[label];
+        delete this._labels2DivID[label];
+        const labelElement = document.getElementById('labelElement-' + label);
+        labelElement.remove();
+      }
+      delete this._divID2Content[boundingBoxID];
+      document.getElementById(boundingBoxID).remove();
+      document.getElementById(labelID).remove();
+      const modal = document.getElementById(modalID);
+      if (modal) {
+        modal.remove();
       }
     },
     _createImage: function () {
@@ -256,15 +293,6 @@
       });
     },
     _createModals: function () {
-      /* 1. Generate all modals 
-           - create div of class modal
-           - create div for modal content
-              -  add span for closing
-                  - span add onclick functionality that closes modal
-              - append child paragraph element if content is text else if HTML element append child that
-        2. Get the bounding boxes that should open modal
-           - bounding boxes add onclick functionality that displays the modal
-      */
       Object.keys(this._divID2Content).map((boundingBoxDivID) => {
         this._createModal(boundingBoxDivID);
       });
@@ -333,10 +361,11 @@
     _createLabelElement: function (label) {
       const labelElement = document.createElement('label');
       labelElement.classList.add('CheckBoxContainer');
+      labelElement.setAttribute('id', 'labelElement-' + label);
       // Create checkbox
       const checkBox = document.createElement('input');
       checkBox.setAttribute('type', 'checkbox');
-      checkBox.setAttribute('id', 'checkBox-' + label);
+      // checkBox.setAttribute('id', 'checkBox-' + label);
       // Set onclick functionality;
       checkBox.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
       checkBox.checked = true;
@@ -355,7 +384,6 @@
       return labelElement;
     },
     _createBoundingBoxStructured: function (parentDiv, boundingBox, index) {
-      // is boundingBox object
       // Create BoundingBox
       const boundingBoxDiv = document.createElement('div');
       boundingBoxDiv.classList.add('BoundingBoxDiv');
@@ -389,12 +417,8 @@
       spanLabel.appendChild(label);
       labelDiv.appendChild(spanLabel);
 
-      // TODO: replace the ids here with boundingBox.id field
-      labelDiv.setAttribute('id', labelText + '-' + index);
-      boundingBoxDiv.setAttribute(
-        'id',
-        'boundingBox-' + labelText + '-' + index
-      );
+      labelDiv.setAttribute('id', 'label-' + boundingBox.id);
+      boundingBoxDiv.setAttribute('id', boundingBox.id);
 
       // Append divs to parent div
       parentDiv.appendChild(boundingBoxDiv);
@@ -415,8 +439,18 @@
       return boundingBoxDiv;
     },
     _createModal: function (boundingBoxDivID) {
+      /* 1. Generate all modals 
+           - create div of class modal
+           - create div for modal content
+              -  add span for closing
+                  - span add onclick functionality that closes modal
+              - append child paragraph element if content is text else if HTML element append child that
+        2. Get the bounding boxes that should open modal
+           - bounding boxes add onclick functionality that displays the modal
+      */
       const modalDiv = document.createElement('div');
       modalDiv.classList.add('modal');
+      modalDiv.setAttribute('id', 'modal-' + boundingBoxDivID);
 
       const modalContent = document.createElement('div');
       modalContent.classList.add('modal-content');

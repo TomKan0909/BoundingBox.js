@@ -39,17 +39,10 @@
     color: white;
 }
 
-.LabelList {
-    list-style-type: none;
-    padding-left: 5%;
-    overflow: hidden;
-    overflow-y: scroll;
-    height: 75%;
-}
 
 .LabelListDiv {
     overflow:hidden;
-    overflow-y:scroll;
+    overflow-y:auto;
     height: 75%;
     padding-left: 5%;
     padding-top: 5%;
