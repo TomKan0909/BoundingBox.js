@@ -103,7 +103,8 @@
       element.style.top =
         Math.min(
           Math.max(0, element.offsetTop - pos2),
-          offsetBottom(parentElement) + window.scrollY -
+          offsetBottom(parentElement) +
+            window.scrollY -
             element.offsetHeight -
             parentElement.offsetTop
         ) + 'px';
@@ -231,7 +232,8 @@
 
       if (!document.getElementById('labelElement-' + boundingBox.label)) {
         const labelElement = this._createLabelElement(boundingBox.label);
-        const labelListDiv = parentDiv.getElementsByClassName('LabelListDiv')[0];
+        const labelListDiv =
+          parentDiv.getElementsByClassName('LabelListDiv')[0];
         labelListDiv.appendChild(labelElement);
       }
     },
@@ -388,8 +390,14 @@
       const boundingBoxDiv = document.createElement('div');
       boundingBoxDiv.classList.add('BoundingBoxDiv');
       // Prevent overflow
-      const height = boundingBox.yLeft * 100 + boundingBox.getHeight() > 99.9 ? boundingBox.getHeight() - 0.5 : boundingBox.getHeight();
-      const width = boundingBox.xLeft * 100 + boundingBox.getWidth() > 99.9 ? boundingBox.getWidth() - 0.5 : boundingBox.getWidth();
+      const height =
+        boundingBox.yLeft * 100 + boundingBox.getHeight() > 99.9
+          ? boundingBox.getHeight() - 0.5
+          : boundingBox.getHeight();
+      const width =
+        boundingBox.xLeft * 100 + boundingBox.getWidth() > 99.9
+          ? boundingBox.getWidth() - 0.5
+          : boundingBox.getWidth();
       boundingBoxDiv.setAttribute(
         'style',
         boundingBoxDiv.getAttribute('style') +
@@ -414,8 +422,9 @@
 
       let bottomOrTop = boundingBox.yRight * 100 + 0.5;
       const labelBottomOrTopStyle = bottomOrTop < 95 ? 'bottom:' : 'top:';
-      bottomOrTop = bottomOrTop < 95 ? bottomOrTop : 100 - boundingBox.yLeft * 100 - 0.5;
-      const bottomOrTopArg = labelBottomOrTopStyle + bottomOrTop + "%"
+      bottomOrTop =
+        bottomOrTop < 95 ? bottomOrTop : 100 - boundingBox.yLeft * 100 - 0.5;
+      const bottomOrTopArg = labelBottomOrTopStyle + bottomOrTop + '%';
 
       labelDiv.setAttribute(
         'style',
