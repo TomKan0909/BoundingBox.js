@@ -107,7 +107,7 @@ const props0 = {
   width: '1400',
   height: '860',
   displayLegend: true,
-  modalOnClick: true,
+  boundingBoxOnClick: true,
   boundingBoxes: [
     {
       coordinates: [
@@ -242,7 +242,7 @@ const props1 = {
   width: '1422',
   height: '680',
   displayLegend: false,
-  modalOnClick: false,
+  boundingBoxOnClick: false,
   boundingBoxes: [
     {
       coordinates: [
@@ -378,7 +378,7 @@ const props2 = {
   width: '1200',
   height: '800',
   displayLegend: true,
-  modalOnClick: true,
+  boundingBoxOnClick: true,
   boundingBoxes: [],
 };
 

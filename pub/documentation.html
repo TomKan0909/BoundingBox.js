@@ -1,6 +1,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.1.0/github-markdown-light.css">
     <style>
         .markdown-body {
             box-sizing: border-box;
@@ -9,7 +10,7 @@
             margin: 0 auto;
             padding: 45px;
         }
-    
+
         @media (max-width: 767px) {
             .markdown-body {
                 padding: 15px;
@@ -19,15 +20,56 @@
     <article class="markdown-body">
         <h1>
             <a id="user-content-bounding-box-annotate" class="anchor" href="#bounding-box-annotate"
-                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bounding Box Annotate</h1>
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bounding Box
+            Annotate
+        </h1>
+        <p>A js library to draw bounding boxes on images, label parts of images and annotate an image. <a
+                href="https://www.google.com/" rel="nofollow">Demo</a> can be found here.</p>
         <hr>
         <h2>
-            <a id="user-content-getting-started" class="anchor" href="#getting-started"
-                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
+            <a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span
+                    aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started
+        </h2>
+        <p>Fetch BoundingBoxAnnotate.js library by placing these in your html document underneath the
+            <code>&lt;head&gt;</code>
+            tag</p>
+        <div class="highlight highlight-text-html-basic">
+            <pre><span class="pl-kos">&lt;</span><span class="pl-ent">script</span> <span class="pl-c1">defer</span> <span class="pl-c1">type</span>="<span class="pl-s">text/javascript</span>" <span class="pl-c1">src</span>="<span class="pl-s">tbd</span>"<span class="pl-kos">&gt;</span><span class="pl-kos">&lt;/</span><span class="pl-ent">script</span><span class="pl-kos">&gt;</span>
+<span class="pl-kos">&lt;</span><span class="pl-ent">link</span> <span class="pl-c1">rel</span>="<span class="pl-s">stylesheet</span>" <span class="pl-c1">href</span>="<span class="pl-s">tbd</span>"/&gt;</pre>
+        </div>
+        <p>Create a div to add the image in your html document underneath the <code>&lt;body&gt;</code> tag</p>
+        <div class="highlight highlight-text-html-basic">
+            <pre><span class="pl-kos">&lt;</span><span class="pl-ent">div</span> <span class="pl-c1">id</span>="<span class="pl-s">myUniqueDivID</span>"<span class="pl-kos">&gt;</span><span class="pl-kos">&lt;/</span><span class="pl-ent">div</span><span class="pl-kos">&gt;</span></pre>
+        </div>
+        <p>Add an example code block that follows this in your.js file to use the library</p>
+        <div class="highlight highlight-source-js">
+            <pre><span class="pl-k">const</span> <span class="pl-s1">props1</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+          <span class="pl-c1">id</span>: <span class="pl-s">'myUniqueDivID'</span><span class="pl-kos">,</span> <span class="pl-c">// The div id to insert image </span>
+          <span class="pl-c1">image</span>: <span class="pl-s">'images/image1.jpeg'</span><span class="pl-kos">,</span> <span class="pl-c">// path of image to insert into div</span>
+          <span class="pl-c1">width</span>: <span class="pl-s">'800'</span><span class="pl-kos">,</span> <span class="pl-c">// width of image in pixels</span>
+          <span class="pl-c1">height</span>: <span class="pl-s">'600'</span><span class="pl-kos">,</span> <span class="pl-c">// height of image in pixels</span>
+          <span class="pl-c1">displayLegend</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span> <span class="pl-c">// boolean flag to display or not display the legend</span>
+          <span class="pl-c1">boundingBoxOnClick</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span> <span class="pl-c">// boolean flag to turn on or off the behavior when clicking on </span>
+          <span class="pl-c1">boundingBoxes</span>: <span class="pl-kos">[</span>
+                <span class="pl-kos">{</span>
+                <span class="pl-c1">coordinates</span>: <span class="pl-kos">[</span>
+                    <span class="pl-kos">[</span><span class="pl-c1">0.2</span><span class="pl-kos">,</span> <span class="pl-c1">0.3</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+                    <span class="pl-kos">[</span><span class="pl-c1">0.3</span><span class="pl-kos">,</span> <span class="pl-c1">0.4</span><span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-kos">]</span><span class="pl-kos">,</span>
+                <span class="pl-c1">color</span>: <span class="pl-s">'#1B8C7F'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">label</span>: <span class="pl-s">'myLabel'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">id</span>: <span class="pl-s">'Unique ID :)'</span><span class="pl-kos">,</span>
+                <span class="pl-c1">content</span>: <span class="pl-s">'Your first bounding box'</span><span class="pl-kos">,</span>
+                <span class="pl-kos">}</span>
+            <span class="pl-kos">]</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+<span class="pl-s1">props1</span><span class="pl-kos">.</span><span class="pl-en">createBoundingBoxAnnotate</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre>
+        </div>
         <hr>
         <h2>
-            <a id="user-content-api" class="anchor" href="#api"
-                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h2>
+            <a id="user-content-api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true"
+                    class="octicon octicon-link"></span></a>API
+        </h2>
         <hr>
     </article>
 

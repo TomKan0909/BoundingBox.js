@@ -42,8 +42,8 @@
     this.boundingBoxes = processBoundingBoxList(props.boundingBoxes);
     this.displayLegend =
       props.displayLegend !== undefined ? props.displayLegend : true;
-    this.modalOnClick =
-      props.modalOnClick !== undefined ? props.modalOnClick : true;
+    this.boundingBoxOnClick =
+      props.boundingBoxOnClick !== undefined ? props.boundingBoxOnClick : true;
 
     this._labels2DivID = {}; // stores a mapping of labels to their corresponding divs
     this._labels2Color = {}; // stores a mapping of labels to corresponding color
@@ -154,7 +154,7 @@
       const image = this._createImage();
       parentDiv.appendChild(image);
       this._createBoundingBoxes(parentDiv);
-      if (this.modalOnClick) {
+      if (this.boundingBoxOnClick) {
         this._createModals();
       }
       if (this.displayLegend) {
@@ -185,7 +185,7 @@
       // Check if modals are generated
       const modalGenerated =
         parentDiv.getElementsByClassName('modal').length !== 0;
-      this.modalOnClick = isOnClick;
+      this.boundingBoxOnClick = isOnClick;
       if (!modalGenerated && isOnClick) {
         this._createModals();
         return;

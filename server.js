@@ -20,6 +20,10 @@ app.get('/main.html', (req, res) => {
   res.sendFile(path.join(__dirname, '/pub/main.html'));
 });
 
+app.get('/documentation.html', (req, res) => {
+    res.sendFile(path.join(__dirname, '/pub/documentation.html'));
+})
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   log(`Listening on port ${port}...`);
