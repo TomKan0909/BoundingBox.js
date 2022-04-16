@@ -1,3 +1,28 @@
 body {
     font-family: 'Helvetica', 'Arial', sans-serif;
+    margin-left:10%;
+    margin-right: 10%
+}
+.h1main {
+    color: #4A6274;
+}
+
+.h2main {
+    color: #94ACBF;
+}
+
+.pmain {
+    margin-bottom: 5%;
+}
+
+.CardContent {
+    text-align: center;
+}
+
+.CardContent img {
+    border-radius: 5%;
+}
+
+.CardContent p {
+    margin: 5%;
 }

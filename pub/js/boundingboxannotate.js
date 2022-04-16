@@ -100,11 +100,10 @@
       }
 
       const parentElement = element.parentElement;
-
       element.style.top =
         Math.min(
           Math.max(0, element.offsetTop - pos2),
-          offsetBottom(parentElement) -
+          offsetBottom(parentElement) + window.scrollY -
             element.offsetHeight -
             parentElement.offsetTop
         ) + 'px';
@@ -283,7 +282,7 @@
       if (this.height) {
         image.height = this.height;
       }
-      image.setAttribute('style', 'display:block');
+      image.setAttribute('style', 'display:block;object-fit:fill;');
       return image;
     },
     _createBoundingBoxes: function (parentDiv) {
