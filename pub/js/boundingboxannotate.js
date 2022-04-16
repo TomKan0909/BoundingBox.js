@@ -231,7 +231,7 @@
 
       if (!document.getElementById('labelElement-' + boundingBox.label)) {
         const labelElement = this._createLabelElement(boundingBox.label);
-        const labelListDiv = document.getElementsByClassName('LabelListDiv')[0];
+        const labelListDiv = parentDiv.getElementsByClassName('LabelListDiv')[0];
         labelListDiv.appendChild(labelElement);
       }
     },

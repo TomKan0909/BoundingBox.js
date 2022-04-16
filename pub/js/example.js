@@ -135,8 +135,8 @@ bba0.createBoundingBoxAnnotate();
 const props1 = {
     id: 'example1',
     image: 'images/image1.jpeg',
-    width: '1400',
-    height: '700', 
+    width: '1422',
+    height: '680', 
     displayLegend: false,
     modalOnClick: false,
     boundingBoxes : [
@@ -238,7 +238,85 @@ toggleOnClick.onclick = () => {
     }
 }
 
+const props2 = {
+    id: 'example2',
+    image: 'images/image2.jpeg',
+    width: '1200',
+    height: '800', 
+    displayLegend: true,
+    modalOnClick: true,
+    boundingBoxes: []
+};
 
+const bba2 = new BoundingBoxAnnotate(props2);
+bba2.createBoundingBoxAnnotate();
 
+const label2color = {
+    'Alpha': '#214559',
+    'Beta': '#262b2f',
+    'Gamma': '#00626f',
+    'Delta': '#0f3b57',
+    'Epsilon': '#00022e',
+    'Zeta': '#112222',
+    'Eta': '#2a293e',
+    'Theta': '#2b6867',
+    'Iota': '#29304e',
+    'Kappa': '#020035',
+    'Lambda': '#34414e',
+    'Mu': '#040348',
+    'Nu': '#391285',
+    'Xi': '#203e4a',
+    'Omicron': '#184343',
+    'Pi': '#373e02',
+    'Rho': '#6f7755',
+    'Sigma': '#11574a',
+    'Tau': '#495e35',
+    'Upsilon': '#35654d',
+    'Phi': '#c65102',
+    'Chi': '#4a0100',
+    'Psi': '#490648',
+    'Omega': '#754600'
+}
 
+const randomBoundingBox = () => {
+    let lx = Math.random(), 
+    ly = Math.random(), 
+    rx = Math.random(), 
+    ry = Math.random();
 
+    if(lx > rx){
+        [lx, rx] = [rx, lx];
+    }
+    if (ly > ry) {
+        [ly , ry] = [ry, ly];
+    }
+    function uuidv4() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+          (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+      }
+
+    const id = uuidv4();
+    const content = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+    const label = Object.keys(label2color)[Math.floor(Math.random() * Object.keys(label2color).length)]
+    const color = label2color[label];
+    return {
+        coordinates: [[lx, ly], [rx, ry]],
+        color: color,
+        label: label,
+        id: id,
+        content: content
+    }
+}
+
+const addButton = document.getElementById('addRandomBoundingBox');
+addButton.onclick = () => {
+    bba2.addBoundingBox(randomBoundingBox());
+}
+
+const deleteButton = document.getElementById('deleteRandomBoundingBox');
+deleteButton.onclick = () => {
+    const boundingBoxIDS = bba2.boundingBoxes.map(bb => bb.id);
+    const randID = boundingBoxIDS[Math.floor(Math.random() * boundingBoxIDS.length)];
+    bba2.deleteBoundingBox(randID);
+}
