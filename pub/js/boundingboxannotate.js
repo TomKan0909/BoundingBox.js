@@ -162,7 +162,7 @@
     },
     toggleLegend: function (isDisplay) {
       const parentDiv = document.getElementById(this.id).firstChild;
-      let legendDiv = document.getElementsByClassName('LegendDiv');
+      let legendDiv = parentDiv.getElementsByClassName('LegendDiv');
 
       this.displayLegend = isDisplay;
       if (legendDiv.length !== 0) {
@@ -180,9 +180,10 @@
     },
     toggleOnClick: function (isOnClick) {
       const boundingBoxDivIDs = Object.keys(this._divID2Content);
+      const parentDiv = document.getElementById(this.id).firstChild;
       // Check if modals are generated
       const modalGenerated =
-        document.getElementsByClassName('modal').length !== 0;
+        parentDiv.getElementsByClassName('modal').length !== 0;
       this.modalOnClick = isOnClick;
       if (!modalGenerated && isOnClick) {
         this._createModals();
@@ -223,7 +224,7 @@
       this._createModal(boundingBoxDiv.id);
 
       // Add bounding box to legend
-      let legendDiv = document.getElementsByClassName('LegendDiv');
+      let legendDiv = parentDiv.getElementsByClassName('LegendDiv');
       if (legendDiv.length === 0) {
         return;
       }
