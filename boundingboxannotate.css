@@ -12,6 +12,10 @@
     transition: all 0.5s linear;
 }
 
+.BoundingBoxDiv:hover {
+    background-color: rgba(0,0,0,0.35);
+}
+
 .LabelDiv {
     color:white;
     border-radius:2%;

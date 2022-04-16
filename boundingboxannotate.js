@@ -488,8 +488,9 @@
       );
 
       window.onclick = (event) => {
-        if (event.target == modalDiv) {
-          modalContent.style.display = 'none';
+        console.log(event.target);
+        if (event.target.className.includes('modal')) {
+          event.target.style.display = 'none';
         }
       };
 
