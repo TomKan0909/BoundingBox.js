@@ -24,6 +24,14 @@ app.get('/documentation.html', (req, res) => {
     res.sendFile(path.join(__dirname, '/pub/documentation.html'));
 })
 
+app.get('/boundingbox.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '/pub/js/boundingbox.js'));
+})
+
+app.get('/boundingbox.css', (req, res) => {
+  res.sendFile(path.join(__dirname, '/pub/css/boundingbox.css'));
+})
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   log(`Listening on port ${port}...`);

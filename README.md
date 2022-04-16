@@ -1,6 +1,7 @@
 # Bounding Box
 
-A interactive js library to draw bounding boxes with labels and descriptions for images [Demo](https://www.google.com/) can be found here.
+## About
+A interactive js library to draw bounding boxes with labels and descriptions for images. [Demonstration](https://www.google.com/) can be found here.
 
 ---
 
@@ -17,7 +18,7 @@ Create a div to add the image in your html document underneath the `<body>` tag
 <div id="myUniqueDivID"></div>
 ```
 
-Add an example code block that follows this in your.js file to use the library
+Add an example code block that follows this in your .js file to use the library
 ```javascript
 const props = {
   id: 'myUniqueDivID', // The div id to insert image 

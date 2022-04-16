@@ -53,34 +53,38 @@
 </head>
 
 <body>
-  <h1 class="h1main">BoundingBoxAnnotate.js</h1>
+  <h1 class="h1main">BoundingBox.js</h1>
   <h2 class="h2main">About</h2>
-  <p class="pmain">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-    commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
-    laborum. </p>
-  <div>
+  <p class="pmain">A js library to draw bounding boxes on images, label parts of images and annotate an image.
+  </p>
+  <p class="pmain">
+    Visit the documentation <a href="./documentation.html">here</a>.
+  </p>
+  <div class="examplecontainermain">
     <h2 class="h2main">
-      Example 1
+      Example 1 - A Basic Use Case of the BoundingBox.js
     </h2>
-    <p class="pmain">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    <p>
+      We can use our library for computer vision related visualization, such as object detection in the streets of Hong Kong.
+      <br><br>
+      Click on individual bounding boxes to check out it's content.
+      <br><br>      
+      Hide or show individual bounding boxes by clicking on the it's corresponding label in the legend located on bottom right.
+      <br><br>
+      If you don't like where the legend is placed you can relocate the legend simply by dragging it.
     </p>
     <div id="example0"></div>
   </div>
-  <div>
+  <div class="examplecontainermain">
     <h2 class="h2main">
-      Example 2
+      Example 2 - Set the Behavior of BoundingBox.js
     </h2>
     <p class="pmain">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      You can also use the library to annotate your favorite scene from a movie.
+      <br><br>
+      Here we set the bounding box by default to not display the legend and not allow boundingbox onclick functionality.
+      <br><br>
+      Toggle the switches at the bottom to change the image's behavior.
     </p>
     <div id="example1"></div>
     <div style="margin-top:2%"></div>
@@ -117,15 +121,16 @@
       Toggle onClick behavior for bounding boxes
     </label>
   </div>
-  <div>
+  <div class="examplecontainermain">
     <h2 class="h2main">
-      Example 3
+      Example 3 - Create as Many Bounding Boxes as you Like 
     </h2>
     <p class="pmain">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-      magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-      Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      Here is an empty canvas.
+      <br><br>
+      Populate it with random bounding boxes by clicking the add button below.
+      <br><br>
+      Or delete the bounding boxes, choice is yours :)
     </p>
     <div id="example2"></div>
     <button class="buttonmain" id="addRandomBoundingBox">Add bounding box</button>

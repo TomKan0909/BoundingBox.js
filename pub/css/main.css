@@ -28,6 +28,11 @@ body {
     margin: 5%;
 }
 
+.examplecontainermain {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
 /*https://codepen.io/xirclebox/pen/wvGmjbV*/
 .toggle {
     align-items: center;
