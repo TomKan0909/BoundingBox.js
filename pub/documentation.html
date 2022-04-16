@@ -19,20 +19,15 @@
     </style>
     <article class="markdown-body">
         <h1>
-            <a id="user-content-bounding-box-annotate" class="anchor" href="#bounding-box-annotate"
-                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bounding Box
-            Annotate
-        </h1>
-        <p>A js library to draw bounding boxes on images, label parts of images and annotate an image. <a
+            <a id="user-content-bounding-box" class="anchor" href="#bounding-box"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bounding Box</h1>
+        <p>A interactive js library to draw bounding boxes with labels and descriptions for images <a
                 href="https://www.google.com/" rel="nofollow">Demo</a> can be found here.</p>
         <hr>
         <h2>
-            <a id="user-content-getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span
-                    aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started
-        </h2>
-        <p>Fetch BoundingBoxAnnotate.js library by placing these in your html document underneath the
-            <code>&lt;head&gt;</code>
-            tag</p>
+            <a id="user-content-getting-started" class="anchor" href="#getting-started"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started</h2>
+        <p>Fetch BoundingBox.js library by placing these in your html document underneath the <code>&lt;head&gt;</code> tag</p>
         <div class="highlight highlight-text-html-basic">
             <pre><span class="pl-kos">&lt;</span><span class="pl-ent">script</span> <span class="pl-c1">defer</span> <span class="pl-c1">type</span>="<span class="pl-s">text/javascript</span>" <span class="pl-c1">src</span>="<span class="pl-s">tbd</span>"<span class="pl-kos">&gt;</span><span class="pl-kos">&lt;/</span><span class="pl-ent">script</span><span class="pl-kos">&gt;</span>
 <span class="pl-kos">&lt;</span><span class="pl-ent">link</span> <span class="pl-c1">rel</span>="<span class="pl-s">stylesheet</span>" <span class="pl-c1">href</span>="<span class="pl-s">tbd</span>"/&gt;</pre>
@@ -43,9 +38,9 @@
         </div>
         <p>Add an example code block that follows this in your.js file to use the library</p>
         <div class="highlight highlight-source-js">
-            <pre><span class="pl-k">const</span> <span class="pl-s1">props1</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
+            <pre><span class="pl-k">const</span> <span class="pl-s1">props</span> <span class="pl-c1">=</span> <span class="pl-kos">{</span>
           <span class="pl-c1">id</span>: <span class="pl-s">'myUniqueDivID'</span><span class="pl-kos">,</span> <span class="pl-c">// The div id to insert image </span>
-          <span class="pl-c1">image</span>: <span class="pl-s">'images/image1.jpeg'</span><span class="pl-kos">,</span> <span class="pl-c">// path of image to insert into div</span>
+          <span class="pl-c1">image</span>: <span class="pl-s">'images/image.jpeg'</span><span class="pl-kos">,</span> <span class="pl-c">// path of image to insert into div</span>
           <span class="pl-c1">width</span>: <span class="pl-s">'800'</span><span class="pl-kos">,</span> <span class="pl-c">// width of image in pixels</span>
           <span class="pl-c1">height</span>: <span class="pl-s">'600'</span><span class="pl-kos">,</span> <span class="pl-c">// height of image in pixels</span>
           <span class="pl-c1">displayLegend</span>: <span class="pl-c1">true</span><span class="pl-kos">,</span> <span class="pl-c">// boolean flag to display or not display the legend</span>
@@ -63,14 +58,100 @@
                 <span class="pl-kos">}</span>
             <span class="pl-kos">]</span>
         <span class="pl-kos">}</span><span class="pl-kos">;</span>
-<span class="pl-s1">props1</span><span class="pl-kos">.</span><span class="pl-en">createBoundingBoxAnnotate</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre>
+<span class="pl-k">const</span> <span class="pl-s1">boundingBoxAnnotate</span> <span class="pl-c1">=</span> <span class="pl-k">new</span> <span class="pl-v">BoundingBoxAnnotate</span><span class="pl-kos">(</span><span class="pl-s1">props</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+<span class="pl-s1">boundingBoxAnnotate</span><span class="pl-kos">.</span><span class="pl-en">createBoundingBoxAnnotate</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span></pre>
         </div>
         <hr>
         <h2>
-            <a id="user-content-api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true"
-                    class="octicon octicon-link"></span></a>API
-        </h2>
-        <hr>
+            <a id="user-content-api" class="anchor" href="#api"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h2>
+        <h3>
+            <a id="user-content-constructor-new-boundingboxannotateprops" class="anchor"
+                href="#constructor-new-boundingboxannotateprops"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>Constructor: new BoundingBoxAnnotate(props)</code>
+        </h3>
+        <p>Initializes BoundingBoxAnnotate object</p>
+        <p>Fields in props</p>
+        <ul>
+            <li>
+                <p><code>id: str</code></p>
+                <p>The div id in HTML document to insert image</p>
+            </li>
+            <li>
+                <p><code>image: str</code></p>
+                <p>Path to image</p>
+            </li>
+            <li>
+                <p><code>width: int</code></p>
+                <p>The width of image in pixels</p>
+            </li>
+            <li>
+                <p><code>height: int</code></p>
+                <p>The height of image in pixels</p>
+            </li>
+            <li>
+                <p><code>displayLegend: boolean</code></p>
+                <p>Displays legend if <code>true</code>, does not display legend if <code>false</code></p>
+            </li>
+            <li>
+                <p><code>boundingBoxOnClick: boolean</code></p>
+                <p>Enables boundingBoxOnClick behavior if <code>true</code>, disables boundingBoxOnClick behavior if
+                    <code>false</code></p>
+            </li>
+            <li>
+                <p><code>boundingBoxes: [BoundingBox]</code></p>
+                <p>A list of <code>BoundingBox</code> objects. Props for <code>BoundingBox</code> type explained below</p>
+                <ul>
+                    <li>
+                        <p><code>coordinates: [[lowerLeftX: float, lowerLeftY: float], [upperRightX: float, upperRightY: float]]</code>
+                        </p>
+                        <p>Represents the coordinates of a bounding box. Make sure
+                            <code>lowerLeftX &lt; upperRightX &amp;&amp; lowerLeftY &lt; upperRightY</code> and values for each
+                            coordinate are values between <code>[0, 1)</code></p>
+                    </li>
+                    <li>
+                        <p><code>color: str</code></p>
+                        <p>Html accepted color code. Make sure <code>color:label</code> have a 1:1 relationship. That is if
+                            there exists a boundingBox with label <code>'label'</code> and color <code>'blue'</code>, subsequent
+                            bounding boxes with label <code>'label'</code> must have color <code>'blue'</code> and vice versa
+                        </p>
+                    </li>
+                    <li>
+                        <p><code>label: str</code></p>
+                        <p>Label of Bounding Box. Make sure <code>label:color</code> have a 1:1 relationship</p>
+                    </li>
+                    <li>
+                        <p><code>id: str</code></p>
+                        <p>The unique if to identify the bounding box by</p>
+                    </li>
+                    <li>
+                        <p><code>content: str | HTMLElement</code></p>
+                        <p>The annotated content for the bounding box, can be plain text or user's custom component</p>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <h3>
+            <a id="user-content-togglelegendisdisplay-boolean-void" class="anchor" href="#togglelegendisdisplay-boolean-void"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>toggleLegend(isDisplay: boolean): void</code>
+        </h3>
+        <p>A function to display and and hide legend</p>
+        <h3>
+            <a id="user-content-toggleonclickisonclick-boolean-void" class="anchor" href="#toggleonclickisonclick-boolean-void"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>toggleOnClick(isOnClick: boolean): void</code>
+        </h3>
+        <p>A function to turn on/off functionality for onclick on bounding boxes</p>
+        <h3>
+            <a id="user-content-addboundingboxboundingbox-boundingbox-void" class="anchor"
+                href="#addboundingboxboundingbox-boundingbox-void"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>addBoundingBox(boundingBox: BoundingBox): void</code>
+        </h3>
+        <p>A function to add a new bounding box to image</p>
+        <h3>
+            <a id="user-content-deleteboundingboxboundingboxid-void" class="anchor" href="#deleteboundingboxboundingboxid-void"
+                aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>deleteBoundingBox(boundingBoxID): void</code>
+        </h3>
+        <p>A function to delete a bounding box specified by it's id</p>
     </article>
 
 </head>
