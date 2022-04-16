@@ -12,6 +12,10 @@ const path = require('path');
 // Don't put anything in /pub that you don't want the public to have access to!
 app.use(express.static(path.join(__dirname, '/pub')))
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/pub/main.html'));
+})
+
 app.get('/main.html', (req, res) => {
     res.sendFile(path.join(__dirname, '/pub/main.html'));
 })
