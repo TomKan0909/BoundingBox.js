@@ -83,7 +83,6 @@
       pos3 = e.clientX;
       pos4 = e.clientY;
       // set the element's new position:
-      console.log('top: ', element.parentElement.offsetTop);
 
       //https://stackoverflow.com/questions/9872128/get-bottom-and-right-position-of-an-element
       // Returns bottom offset value + or - from viewport top
@@ -97,7 +96,7 @@
         i = i || 0;
         return $(el)[i].getBoundingClientRect().right;
       }
-      console.log('bottom: ', offsetBottom(element.parentElement));
+
       const parentElement = element.parentElement;
 
       element.style.top =
@@ -152,18 +151,19 @@
       div.appendChild(parentDiv);
       const image = this._createImage();
       parentDiv.appendChild(image);
-      this._drawBoundingBoxes(parentDiv);
+      this._createBoundingBoxes(parentDiv);
       if (this.modalOnClick) {
-        this._generateModals();
+        this._createModals();
       }
       if (this.displayLegend) {
-        this._generateLegend(parentDiv);
+        this._createLegend(parentDiv);
       }
     },
     toggleLegend: function (isDisplay) {
       const parentDiv = document.getElementById(this.id).firstChild;
       let legendDiv = document.getElementsByClassName('LegendDiv');
 
+      this.displayLegend = isDisplay;
       if (legendDiv.length !== 0) {
         legendDiv = legendDiv[0];
         if (isDisplay) {
@@ -173,7 +173,7 @@
         }
       } else {
         if (isDisplay) {
-          this._generateLegend(parentDiv);
+          this._createLegend(parentDiv);
         }
       }
     },
@@ -182,8 +182,9 @@
       // Check if modals are generated
       const modalGenerated =
         document.getElementsByClassName('modal').length !== 0;
+      this.modalOnClick = isOnClick;
       if (!modalGenerated && isOnClick) {
-        this._generateModals();
+        this._createModals();
         return;
       }
 
@@ -207,6 +208,35 @@
         }
       });
     },
+    addBoundingBox: function (boundingBox) {
+      // Draw Bounding Box
+      const parentDiv = document.getElementById(this.id).firstChild;
+      const boundingBoxStructured = processBoundingBoxList([boundingBox])[0];
+      this.boundingBoxes.push(boundingBoxStructured);
+      const index = this.boundingBoxes.length;
+      const boundingBoxDiv = this._createBoundingBoxStructured(
+        parentDiv,
+        boundingBoxStructured,
+        index
+      );
+      this._createModal(boundingBoxDiv.id);
+
+      // Add bounding box to legend
+      let legendDiv = document.getElementsByClassName('LegendDiv');
+      if (legendDiv.length === 0) {
+        return;
+      }
+      // Check if checkbox with label exists, if it doesnt, create a new checkbox else
+      // get corresponding checkbox by its id and change its onclick functionality
+      const checkBox = document.getElementById('checkBox-' + boundingBox.label);
+      if (checkBox) {
+        // maybe dont have to do anything???
+      } else {
+        const labelElement = this._createLabelElement(boundingBox.label);
+        const labelListDiv = document.getElementsByClassName('LabelListDiv')[0];
+        labelListDiv.appendChild(labelElement);
+      }
+    },
     _createImage: function () {
       let image = document.createElement('img');
       image.src = this.image;
@@ -219,67 +249,13 @@
       image.setAttribute('style', 'display:block');
       return image;
     },
-    _drawBoundingBoxes: function (parentDiv) {
+    _createBoundingBoxes: function (parentDiv) {
       this.boundingBoxes.forEach((boundingBox, index) => {
         // Create BoundingBox
-        const boundingBoxDiv = document.createElement('div');
-        boundingBoxDiv.classList.add('BoundingBoxDiv');
-        boundingBoxDiv.setAttribute(
-          'style',
-          boundingBoxDiv.getAttribute('style') +
-            `;position:absolute;bottom:${boundingBox.yLeft * 100}%;
-                left:${
-                  boundingBox.xLeft * 100
-                }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${
-              boundingBox.color
-            };z-index:${index + 1}`
-        );
-
-        // Add Label
-        const labelDiv = document.createElement('div');
-        labelDiv.classList.add('LabelDiv');
-        labelDiv.setAttribute(
-          'style',
-          labelDiv.getAttribute('style') +
-            `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
-                left:${boundingBox.xLeft * 100}%;background-color:${
-              boundingBox.color
-            };z-index:${index};`
-        );
-
-        const spanLabel = document.createElement('span');
-        const labelText = boundingBox.label;
-        const label = document.createTextNode(labelText);
-
-        spanLabel.appendChild(label);
-        labelDiv.appendChild(spanLabel);
-
-        labelDiv.setAttribute('id', labelText + '-' + index);
-        boundingBoxDiv.setAttribute(
-          'id',
-          'boundingBox-' + labelText + '-' + index
-        );
-
-        // Append divs to parent div
-        parentDiv.appendChild(boundingBoxDiv);
-        parentDiv.appendChild(labelDiv);
-
-        // Add labels to labels2divID
-        if (!this._labels2DivID[labelText]) {
-          this._labels2DivID[labelText] = [];
-        }
-        this._labels2DivID[labelText].push(boundingBoxDiv.id, labelDiv.id);
-
-        // Add colors to labels2color
-        if (!this._labels2Color[labelText]) {
-          this._labels2Color[labelText] = boundingBox.color;
-        }
-        // Add content mapping to div;
-        this._divID2Content[boundingBoxDiv.id] = boundingBox.content;
+        this._createBoundingBoxStructured(parentDiv, boundingBox, index);
       });
     },
-
-    _generateModals: function () {
+    _createModals: function () {
       /* 1. Generate all modals 
            - create div of class modal
            - create div for modal content
@@ -290,59 +266,14 @@
            - bounding boxes add onclick functionality that displays the modal
       */
       Object.keys(this._divID2Content).map((boundingBoxDivID) => {
-        const modalDiv = document.createElement('div');
-        modalDiv.classList.add('modal');
-
-        const modalContent = document.createElement('div');
-        modalContent.classList.add('modal-content');
-        modalDiv.appendChild(modalContent);
-
-        const spanClose = document.createElement('span');
-        spanClose.classList.add('close');
-        const closeSymbol = document.createTextNode('\u2715');
-        spanClose.appendChild(closeSymbol);
-        spanClose.onclick = () => {
-          modalDiv.style.display = 'none';
-        };
-        modalContent.appendChild(spanClose);
-
-        const content = this._divID2Content[boundingBoxDivID];
-        if (typeof content === 'string') {
-          const contentParagraph = document.createElement('p');
-          const contentParagraphText = document.createTextNode(content);
-          contentParagraph.appendChild(contentParagraphText);
-          modalContent.appendChild(contentParagraph);
-          contentParagraph.setAttribute('style', 'margin:2% 4%');
-        } else if (_isNode(content)) {
-          modalContent.appendChild(content);
-        } else {
-          throw 'Unsupported type for content';
-        }
-
-        const boundingBoxDiv = document.getElementById(boundingBoxDivID);
-        boundingBoxDiv.onclick = () => {
-          modalDiv.style.display = 'block';
-        };
-        boundingBoxDiv.setAttribute(
-          'style',
-          boundingBoxDiv.getAttribute('style') + ';cursor:pointer;'
-        );
-
-        window.onclick = (event) => {
-          if (event.target == modalDiv) {
-            modalContent.style.display = 'none';
-          }
-        };
-
-        boundingBoxDiv.insertAdjacentElement('afterend', modalDiv);
+        this._createModal(boundingBoxDivID);
       });
     },
 
-    _generateLegend: function (parentDiv) {
+    _createLegend: function (parentDiv) {
       const legendDiv = document.createElement('div');
       legendDiv.classList.add('LegendDiv');
 
-      console.log(legendDiv);
       const labelListDiv = document.createElement('div');
       labelListDiv.classList.add('LabelListDiv');
 
@@ -350,31 +281,7 @@
         ...new Set(this.boundingBoxes.map((boundingBox) => boundingBox.label)),
       ];
       uniqueLabels.forEach((label) => {
-        const labelElement = document.createElement('label');
-        labelElement.classList.add('CheckBoxContainer');
-        // Create checkbox
-        const checkBox = document.createElement('input');
-        checkBox.setAttribute('type', 'checkbox');
-        checkBox.setAttribute('id', 'checkBox-' + label);
-        // Set onclick functionality;
-        checkBox.addEventListener(
-          'click',
-          () => this._handleCheckBoxOnclick(checkBox, label),
-          false
-        );
-        checkBox.checked = true;
-        // Create Text
-        const checkMark = document.createElement('span');
-        checkMark.classList.add('CheckMark');
-
-        const textNode = document.createTextNode(label);
-        labelElement.appendChild(textNode);
-        labelElement.appendChild(checkBox);
-        labelElement.appendChild(checkMark);
-        labelElement.setAttribute(
-          'style',
-          `--color: ${this._labels2Color[label]}`
-        );
+        const labelElement = this._createLabelElement(label);
 
         labelListDiv.appendChild(labelElement);
       });
@@ -394,7 +301,6 @@
     _handleCheckBoxOnclick: function (checkBoxElement, label) {
       const divIDsToHide = this._labels2DivID[label];
       // https://www.impressivewebs.com/animate-display-block-none/
-      console.log(divIDsToHide);
       divIDsToHide.forEach((divID) => {
         const element = document.getElementById(divID);
         if (checkBoxElement.checked) {
@@ -423,6 +329,137 @@
           );
         }
       });
+    },
+    _createLabelElement: function (label) {
+      const labelElement = document.createElement('label');
+      labelElement.classList.add('CheckBoxContainer');
+      // Create checkbox
+      const checkBox = document.createElement('input');
+      checkBox.setAttribute('type', 'checkbox');
+      checkBox.setAttribute('id', 'checkBox-' + label);
+      // Set onclick functionality;
+      checkBox.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
+      checkBox.checked = true;
+      // Create Text
+      const checkMark = document.createElement('span');
+      checkMark.classList.add('CheckMark');
+
+      const textNode = document.createTextNode(label);
+      labelElement.appendChild(textNode);
+      labelElement.appendChild(checkBox);
+      labelElement.appendChild(checkMark);
+      labelElement.setAttribute(
+        'style',
+        `--color: ${this._labels2Color[label]}`
+      );
+      return labelElement;
+    },
+    _createBoundingBoxStructured: function (parentDiv, boundingBox, index) {
+      // is boundingBox object
+      // Create BoundingBox
+      const boundingBoxDiv = document.createElement('div');
+      boundingBoxDiv.classList.add('BoundingBoxDiv');
+      boundingBoxDiv.setAttribute(
+        'style',
+        boundingBoxDiv.getAttribute('style') +
+          `;position:absolute;bottom:${boundingBox.yLeft * 100}%;
+            left:${
+              boundingBox.xLeft * 100
+            }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${
+            boundingBox.color
+          };z-index:${index + 1}`
+      );
+
+      // Add Label
+      const labelDiv = document.createElement('div');
+      labelDiv.classList.add('LabelDiv');
+      labelDiv.setAttribute(
+        'style',
+        labelDiv.getAttribute('style') +
+          `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
+            left:${boundingBox.xLeft * 100}%;background-color:${
+            boundingBox.color
+          };z-index:${index};`
+      );
+
+      const spanLabel = document.createElement('span');
+      const labelText = boundingBox.label;
+      const label = document.createTextNode(labelText);
+
+      spanLabel.appendChild(label);
+      labelDiv.appendChild(spanLabel);
+
+      // TODO: replace the ids here with boundingBox.id field
+      labelDiv.setAttribute('id', labelText + '-' + index);
+      boundingBoxDiv.setAttribute(
+        'id',
+        'boundingBox-' + labelText + '-' + index
+      );
+
+      // Append divs to parent div
+      parentDiv.appendChild(boundingBoxDiv);
+      parentDiv.appendChild(labelDiv);
+
+      // Add labels to labels2divID
+      if (!this._labels2DivID[labelText]) {
+        this._labels2DivID[labelText] = [];
+      }
+      this._labels2DivID[labelText].push(boundingBoxDiv.id, labelDiv.id);
+
+      // Add colors to labels2color
+      if (!this._labels2Color[labelText]) {
+        this._labels2Color[labelText] = boundingBox.color;
+      }
+      // Add content mapping to div;
+      this._divID2Content[boundingBoxDiv.id] = boundingBox.content;
+      return boundingBoxDiv;
+    },
+    _createModal: function (boundingBoxDivID) {
+      const modalDiv = document.createElement('div');
+      modalDiv.classList.add('modal');
+
+      const modalContent = document.createElement('div');
+      modalContent.classList.add('modal-content');
+      modalDiv.appendChild(modalContent);
+
+      const spanClose = document.createElement('span');
+      spanClose.classList.add('close');
+      const closeSymbol = document.createTextNode('\u2715');
+      spanClose.appendChild(closeSymbol);
+      spanClose.onclick = () => {
+        modalDiv.style.display = 'none';
+      };
+      modalContent.appendChild(spanClose);
+
+      const content = this._divID2Content[boundingBoxDivID];
+      if (typeof content === 'string') {
+        const contentParagraph = document.createElement('p');
+        const contentParagraphText = document.createTextNode(content);
+        contentParagraph.appendChild(contentParagraphText);
+        modalContent.appendChild(contentParagraph);
+        contentParagraph.setAttribute('style', 'margin:2% 4%');
+      } else if (_isNode(content)) {
+        modalContent.appendChild(content);
+      } else {
+        throw 'Unsupported type for content';
+      }
+
+      const boundingBoxDiv = document.getElementById(boundingBoxDivID);
+      boundingBoxDiv.onclick = () => {
+        modalDiv.style.display = 'block';
+      };
+      boundingBoxDiv.setAttribute(
+        'style',
+        boundingBoxDiv.getAttribute('style') + ';cursor:pointer;'
+      );
+
+      window.onclick = (event) => {
+        if (event.target == modalDiv) {
+          modalContent.style.display = 'none';
+        }
+      };
+
+      boundingBoxDiv.insertAdjacentElement('afterend', modalDiv);
     },
   };
 
