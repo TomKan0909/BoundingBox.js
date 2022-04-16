@@ -279,7 +279,7 @@ const label2color = {
 }
 
 const randomBoundingBox = () => {
-    let lx = Math.random(), 
+    let lx = Math.random()  , 
     ly = Math.random(), 
     rx = Math.random(), 
     ry = Math.random();

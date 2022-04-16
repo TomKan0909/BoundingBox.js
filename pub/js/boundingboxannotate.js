@@ -387,13 +387,16 @@
       // Create BoundingBox
       const boundingBoxDiv = document.createElement('div');
       boundingBoxDiv.classList.add('BoundingBoxDiv');
+      // Prevent overflow
+      const height = boundingBox.yLeft * 100 + boundingBox.getHeight() > 99.9 ? boundingBox.getHeight() - 0.5 : boundingBox.getHeight();
+      const width = boundingBox.xLeft * 100 + boundingBox.getWidth() > 99.9 ? boundingBox.getWidth() - 0.5 : boundingBox.getWidth();
       boundingBoxDiv.setAttribute(
         'style',
         boundingBoxDiv.getAttribute('style') +
           `;position:absolute;bottom:${boundingBox.yLeft * 100}%;
             left:${
               boundingBox.xLeft * 100
-            }%;width:${boundingBox.getWidth()}%;height:${boundingBox.getHeight()}%;border-color:${
+            }%;width:${width}%;height:${height}%;border-color:${
             boundingBox.color
           };z-index:${index + 1}`
       );
@@ -401,14 +404,6 @@
       // Add Label
       const labelDiv = document.createElement('div');
       labelDiv.classList.add('LabelDiv');
-      labelDiv.setAttribute(
-        'style',
-        labelDiv.getAttribute('style') +
-          `;position:absolute;bottom:${boundingBox.yRight * 100 + 0.5}%;
-            left:${boundingBox.xLeft * 100}%;background-color:${
-            boundingBox.color
-          };z-index:${index};`
-      );
 
       const spanLabel = document.createElement('span');
       const labelText = boundingBox.label;
@@ -416,6 +411,20 @@
 
       spanLabel.appendChild(label);
       labelDiv.appendChild(spanLabel);
+
+      let bottomOrTop = boundingBox.yRight * 100 + 0.5;
+      const labelBottomOrTopStyle = bottomOrTop < 95 ? 'bottom:' : 'top:';
+      bottomOrTop = bottomOrTop < 95 ? bottomOrTop : 100 - boundingBox.yLeft * 100 - 0.5;
+      const bottomOrTopArg = labelBottomOrTopStyle + bottomOrTop + "%"
+
+      labelDiv.setAttribute(
+        'style',
+        labelDiv.getAttribute('style') +
+          `;position:absolute;${bottomOrTopArg};
+            left:${boundingBox.xLeft * 100}%;background-color:${
+            boundingBox.color
+          };z-index:${index};`
+      );
 
       labelDiv.setAttribute('id', 'label-' + boundingBox.id);
       boundingBoxDiv.setAttribute('id', boundingBox.id);
