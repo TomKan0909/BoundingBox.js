@@ -9,7 +9,7 @@
 
 const propsV2 = {
     id: 'test',
-    image: 'image0.jpeg',
+    image: 'images/image0.jpeg',
     // width: '800',
     // height: '600', 
     displayLegend: true,

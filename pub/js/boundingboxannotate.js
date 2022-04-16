@@ -488,7 +488,6 @@
       );
 
       window.onclick = (event) => {
-        console.log(event.target);
         if (event.target.className.includes('modal')) {
           event.target.style.display = 'none';
         }
