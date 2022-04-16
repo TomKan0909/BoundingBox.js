@@ -7,11 +7,32 @@
 //     labels: ['label 1', 'label 2', 'label 1'],
 // }
 
+function createElementFromHTML(htmlString) {
+    var div = document.createElement('div');
+    div.innerHTML = htmlString.trim();
+  
+    // Change this to div.childNodes to support multiple top-level nodes.
+    return div.firstChild;
+}
+
+const htmlstr= `
+<div>
+<h2> Title </h2>
+<img src = "https://images.theconversation.com/files/430483/original/file-20211105-9897-18ahqx2.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=1200.0&fit=crop" width="400px" height="400px">
+</img>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.   
+</p>
+
+</div>
+`
+
+
 const propsV2 = {
     id: 'test',
     image: 'images/image0.jpeg',
-    // width: '800',
-    // height: '600', 
+    width: '1200',
+    height: '800', 
     displayLegend: true,
     modalOnClick: true,
     boundingBoxes : [
@@ -20,7 +41,7 @@ const propsV2 = {
             color: 'black',
             label: 'label 1',
             id: 'box1',
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."   
+            content: createElementFromHTML(htmlstr)   
         },
         {
             coordinates: [[0.4, 0.4], [0.7, 0.8]],

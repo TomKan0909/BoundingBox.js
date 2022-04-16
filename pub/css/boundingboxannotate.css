@@ -13,7 +13,7 @@
 }
 
 .BoundingBoxDiv:hover {
-    background-color: rgba(0,0,0,0.35);
+    background-color: rgb(255, 255, 255, 0.45);
 }
 
 .LabelDiv {
