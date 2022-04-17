@@ -76,6 +76,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    text-align: left;
 }
 
 /* Hide the browser's default checkbox */

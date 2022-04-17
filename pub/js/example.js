@@ -105,8 +105,8 @@ const cardsHtmlStr = {
 const props0 = {
   id: 'example0',
   image: 'images/image0.jpeg',
-  width: '1400',
-  height: '860',
+  width: '1300',
+  height: '820',
   displayLegend: true,
   boundingBoxOnClick: true,
   boundingBoxes: [
@@ -240,8 +240,8 @@ bba0.createBoundingBoxAnnotate();
 const props1 = {
   id: 'example1',
   image: 'images/image1.jpeg',
-  width: '1422',
-  height: '680',
+  width: '1300',
+  height: '600',
   displayLegend: false,
   boundingBoxOnClick: false,
   boundingBoxes: [
