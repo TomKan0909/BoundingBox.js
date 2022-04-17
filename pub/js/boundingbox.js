@@ -5,7 +5,7 @@
     this.yLeft = leftBottom[1];
     this.xRight = rightTop[0];
     this.yRight = rightTop[1];
-    this.color = color || _generateRandomColor();
+    this.color = color 
     this.label = label;
     this.content = content;
     this.id = id;
@@ -122,15 +122,6 @@
       document.onmouseup = null;
       document.onmousemove = null;
     }
-  }
-
-  // https://stackoverflow.com/questions/20114469/javascript-generate-random-dark-color
-  function _generateRandomColor() {
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += Math.floor(Math.random() * 10);
-    }
-    return color;
   }
 
   // https://stackoverflow.com/questions/384286/how-do-you-check-if-a-javascript-object-is-a-dom-object
@@ -367,7 +358,6 @@
       // Create checkbox
       const checkBox = document.createElement('input');
       checkBox.setAttribute('type', 'checkbox');
-      // checkBox.setAttribute('id', 'checkBox-' + label);
       // Set onclick functionality;
       checkBox.onclick = () => this._handleCheckBoxOnclick(checkBox, label);
       checkBox.checked = true;
