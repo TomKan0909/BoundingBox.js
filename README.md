@@ -9,8 +9,9 @@ A interactive js library to draw bounding boxes with labels and descriptions for
 Fetch BoundingBox.js library by placing these in your html document underneath the `<head>` tag
 
 ```html
-<script defer type="text/javascript" src="tbd"></script>
-<link rel="stylesheet" href="tbd"/>
+<script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script defer type="text/javascript" src="https://bounding-box-0xffffffff.herokuapp.com/boundingbox.js"></script>
+<link rel="stylesheet" href="https://bounding-box-0xffffffff.herokuapp.com/boundingbox.css"/>
 ```
 
 Create a div to add the image in your html document underneath the `<body>` tag
