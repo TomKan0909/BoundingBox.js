@@ -3,6 +3,9 @@
 ## About
 A interactive js library to draw bounding boxes with labels and descriptions for images. [Demonstration](https://bounding-box-0xffffffff.herokuapp.com/) can be found here and [Documentation](https://bounding-box-0xffffffff.herokuapp.com/documentation.html) can be found here too.
 
+
+<img width="977" alt="Screen Shot 2022-09-14 at 8 11 10 PM" src="https://user-images.githubusercontent.com/43018123/190305174-ea11fe3d-d200-4d6b-92ff-8f5f431650ae.png">
+
 ---
 
 ## Getting Started 
